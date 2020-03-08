@@ -18,6 +18,7 @@ namespace Microsoft.BotBuilderSamples
         public enum Intent {
             ActivitiesEnquiry,
             ActivityBooking,
+            FinishConversation,
             Greeting,
             HealthPlanEnquiry,
             None

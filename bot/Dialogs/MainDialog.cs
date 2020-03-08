@@ -2,8 +2,11 @@
 // Licensed under the MIT License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.MockData;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -67,27 +70,48 @@ namespace CoreBot.Dialogs
             switch (luisResult.TopIntent().intent)
             {
                 case CircleIntent.Intent.ActivitiesEnquiry:
-                    var activitiesEnquiryText = "There are some cool activities happening!";
+                    var activitiesEnquiryText = "There are some interesting activities coming up! Give us a call at the front desk and we will help find something to suit you.";
+
+                    if (luisResult.Entities?.ActivityTime?.Length > 0)
+                    {
+                        List<string> activityNames =
+                            Activities.GetActivityNamesByTimeEntityFilter(luisResult.Entities.ActivityTime.First()).ToList();
+
+                        activitiesEnquiryText = Activities.BuildActivitiesString(activityNames);
+                    }
+
                     var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText, activitiesEnquiryText, InputHints.IgnoringInput);
                     await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
                     break;
-//                    // Initialize BookingDetails with any entities we may have found in the response.
-//                    var bookingDetails = new BookingDetails()
-//                    {
-//                        // Get destination and origin from the composite entities arrays.
-//                        Destination = luisResult.ToEntities.Airport,
-//                        Origin = luisResult.FromEntities.Airport,
-//                        TravelDate = luisResult.TravelDate,
-//                    };
-//
-//                    // Run the BookingDialog giving it whatever details we have from the LUIS call, it will fill out the remainder.
-//                    return await stepContext.BeginDialogAsync(nameof(BookingDialog), bookingDetails, cancellationToken);
+                //                    // Initialize BookingDetails with any entities we may have found in the response.
+                //                    var bookingDetails = new BookingDetails()
+                //                    {
+                //                        // Get destination and origin from the composite entities arrays.
+                //                        Destination = luisResult.ToEntities.Airport,
+                //                        Origin = luisResult.FromEntities.Airport,
+                //                        TravelDate = luisResult.TravelDate,
+                //                    };
+                //
+                //                    // Run the BookingDialog giving it whatever details we have from the LUIS call, it will fill out the remainder.
+                //                    return await stepContext.BeginDialogAsync(nameof(BookingDialog), bookingDetails, cancellationToken);
 
                 case CircleIntent.Intent.ActivityBooking:
-                    // We haven't implemented the GetWeatherDialog so we just display a TODO message.
-                    var getWeatherMessageText = "No problem, let's get you booked on that.";
-                    var getWeatherMessage = MessageFactory.Text(getWeatherMessageText, getWeatherMessageText, InputHints.IgnoringInput);
-                    await stepContext.Context.SendActivityAsync(getWeatherMessage, cancellationToken);
+                    var activityBookingText = "No problem! I've sent that through to the front desk and they'll be in touch soon with details.";
+
+                    if (luisResult.Entities?.ActivityName?.Length > 0)
+                    {
+                        var activityName = luisResult.Entities.ActivityName.First();
+                        activityBookingText = $"No problem! I've let the front desk know that you are interested in the {activityName}. They'll be in touch soon with details.";
+                    }
+
+                    var activityBookingMessage = MessageFactory.Text(activityBookingText, activityBookingText, InputHints.IgnoringInput);
+                    await stepContext.Context.SendActivityAsync(activityBookingMessage, cancellationToken);
+                    break;
+
+                case CircleIntent.Intent.FinishConversation:
+                    var finishConversationText = $"Okay! I'm here if you need me for anything else.";
+                    var finishConversationMessage = MessageFactory.Text(finishConversationText, finishConversationText, InputHints.IgnoringInput);
+                    await stepContext.Context.SendActivityAsync(finishConversationMessage, cancellationToken);
                     break;
 
                 default:
