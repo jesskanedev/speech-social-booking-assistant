@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System;
+using CoreBot.Helpers;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Builder.TraceExtensions;
@@ -22,12 +23,14 @@ namespace CoreBot
                 logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
 
                 // Send a message to the user
-                var errorMessageText = "The bot encountered an error or bug.";
-                var errorMessage = MessageFactory.Text(errorMessageText, errorMessageText, InputHints.IgnoringInput);
+                var errorMessageText = "I'm sorry, I seem to have encountered an error.";
+                var errorMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(errorMessageText);
+                var errorMessage = MessageFactory.Text(errorMessageText, errorMessageSpeak, InputHints.IgnoringInput);
                 await turnContext.SendActivityAsync(errorMessage);
 
-                errorMessageText = "To continue to run this bot, please fix the bot source code.";
-                errorMessage = MessageFactory.Text(errorMessageText, errorMessageText, InputHints.ExpectingInput);
+                errorMessageText = "Please tell your bot developer that they need to fix me!";
+                errorMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(errorMessageText);
+                errorMessage = MessageFactory.Text(errorMessageText, errorMessageSpeak, InputHints.ExpectingInput);
                 await turnContext.SendActivityAsync(errorMessage);
 
                 if (conversationState != null)

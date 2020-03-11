@@ -3,9 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Helpers;
 using CoreBot.MockData;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
@@ -59,6 +61,8 @@ namespace CoreBot.Dialogs
 
         private async Task<DialogTurnResult> ActStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            var showActivitiesAsCards = true;
+
             if (!_luisRecognizer.IsConfigured)
             {
                 // LUIS is not configured, we just run the BookingDialog path with an empty BookingDetailsInstance.
@@ -70,30 +74,54 @@ namespace CoreBot.Dialogs
             switch (luisResult.TopIntent().intent)
             {
                 case CircleIntent.Intent.ActivitiesEnquiry:
-                    var activitiesEnquiryText = "There are some interesting activities coming up! Give us a call at the front desk and we will help find something to suit you.";
-
                     if (luisResult.Entities?.ActivityTime?.Length > 0)
                     {
                         List<string> activityNames =
-                            Activities.GetActivityNamesByTimeEntityFilter(luisResult.Entities.ActivityTime.First()).ToList();
+                            Activities.GetActivityNamesByTimeEntityFilter(luisResult.Entities.ActivityTime.First())
+                                .ToList();
 
-                        activitiesEnquiryText = Activities.BuildActivitiesString(activityNames);
+                        if (showActivitiesAsCards)
+                        {
+                            var activitiesEnquiryText = "I found the following activities. Let me know if you would like to be booked on any of these.";
+                            var enquiryMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(activitiesEnquiryText);
+                            var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText,
+                                enquiryMessageSpeak, InputHints.IgnoringInput);
+                            await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
+
+                            foreach (var activityName in activityNames)
+                            {
+                                var attachments = new List<Attachment>();
+                                var cardReply = MessageFactory.Attachment(attachments);
+
+                                if (activityName.Contains("aquarium", StringComparison.InvariantCultureIgnoreCase)) cardReply.Attachments.Add(Cards.GetActivityCard(Activities.AquariumActivityId).ToAttachment());
+                                else if (activityName.Contains("bus tour", StringComparison.InvariantCultureIgnoreCase)) cardReply.Attachments.Add(Cards.GetActivityCard(Activities.BusTourActivityId).ToAttachment());
+                                else if (activityName.Contains("choir", StringComparison.InvariantCultureIgnoreCase)) cardReply.Attachments.Add(Cards.GetActivityCard(Activities.ChoirShowActivityId).ToAttachment());
+                                else if (activityName.Contains("dinner", StringComparison.InvariantCultureIgnoreCase)) cardReply.Attachments.Add(Cards.GetActivityCard(Activities.DinnerActivityId).ToAttachment());
+
+                                await stepContext.Context.SendActivityAsync(cardReply, cancellationToken);
+                            }
+                        }
+                        else
+                        {
+                            var activitiesEnquiryText = Activities.BuildActivitiesString(activityNames);
+                            var enquiryMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(activitiesEnquiryText);
+                            var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText,
+                                enquiryMessageSpeak, InputHints.IgnoringInput);
+                            await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
+                        }
+                    }
+                    else
+                    {
+                        var activitiesEnquiryText =
+                            "There are some interesting activities coming up! Give us a call at the front desk and we will help find something to suit you.";
+                        var enquiryMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(activitiesEnquiryText);
+                        var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText,
+                            enquiryMessageSpeak, InputHints.IgnoringInput);
+                        await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
                     }
 
-                    var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText, activitiesEnquiryText, InputHints.IgnoringInput);
-                    await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
                     break;
-                //                    // Initialize BookingDetails with any entities we may have found in the response.
-                //                    var bookingDetails = new BookingDetails()
-                //                    {
-                //                        // Get destination and origin from the composite entities arrays.
-                //                        Destination = luisResult.ToEntities.Airport,
-                //                        Origin = luisResult.FromEntities.Airport,
-                //                        TravelDate = luisResult.TravelDate,
-                //                    };
-                //
-                //                    // Run the BookingDialog giving it whatever details we have from the LUIS call, it will fill out the remainder.
-                //                    return await stepContext.BeginDialogAsync(nameof(BookingDialog), bookingDetails, cancellationToken);
+
 
                 case CircleIntent.Intent.ActivityBooking:
                     var activityBookingText = "No problem! I've sent that through to the front desk and they'll be in touch soon with details.";
@@ -104,20 +132,23 @@ namespace CoreBot.Dialogs
                         activityBookingText = $"No problem! I've let the front desk know that you are interested in the {activityName}. They'll be in touch soon with details.";
                     }
 
-                    var activityBookingMessage = MessageFactory.Text(activityBookingText, activityBookingText, InputHints.IgnoringInput);
+                    var activityBookingSpeak = VoiceMessageHelpers.WrapMessageInVoice(activityBookingText);
+                    var activityBookingMessage = MessageFactory.Text(activityBookingText, activityBookingSpeak, InputHints.IgnoringInput);
                     await stepContext.Context.SendActivityAsync(activityBookingMessage, cancellationToken);
                     break;
 
                 case CircleIntent.Intent.FinishConversation:
                     var finishConversationText = $"Okay! I'm here if you need me for anything else.";
-                    var finishConversationMessage = MessageFactory.Text(finishConversationText, finishConversationText, InputHints.IgnoringInput);
+                    var finishConversationSpeak = VoiceMessageHelpers.WrapMessageInVoice(finishConversationText);
+                    var finishConversationMessage = MessageFactory.Text(finishConversationText, finishConversationSpeak, InputHints.IgnoringInput);
                     await stepContext.Context.SendActivityAsync(finishConversationMessage, cancellationToken);
                     break;
 
                 default:
                     // Catch all for unhandled intents
                     var didntUnderstandMessageText = $"Sorry, I didn't get that. Please try asking in a different way (intent was {luisResult.TopIntent().intent})";
-                    var didntUnderstandMessage = MessageFactory.Text(didntUnderstandMessageText, didntUnderstandMessageText, InputHints.IgnoringInput);
+                    var didntUnderstandMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(didntUnderstandMessageText);
+                    var didntUnderstandMessage = MessageFactory.Text(didntUnderstandMessageText, didntUnderstandMessageSpeak, InputHints.IgnoringInput);
                     await stepContext.Context.SendActivityAsync(didntUnderstandMessage, cancellationToken);
                     break;
             }
@@ -138,7 +169,8 @@ namespace CoreBot.Dialogs
                 var timeProperty = new TimexProperty(result.TravelDate);
                 var travelDateMsg = timeProperty.ToNaturalLanguage(DateTime.Now);
                 var messageText = $"I have you booked to {result.Destination} from {result.Origin} on {travelDateMsg}";
-                var message = MessageFactory.Text(messageText, messageText, InputHints.IgnoringInput);
+                var messageSpeak = VoiceMessageHelpers.WrapMessageInVoice(messageText);
+                var message = MessageFactory.Text(messageText, messageSpeak, InputHints.IgnoringInput);
                 await stepContext.Context.SendActivityAsync(message, cancellationToken);
             }
 

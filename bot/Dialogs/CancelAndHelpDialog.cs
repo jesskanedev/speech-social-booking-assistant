@@ -3,6 +3,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using CoreBot.Helpers;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -12,7 +13,10 @@ namespace CoreBot.Dialogs
     public class CancelAndHelpDialog : ComponentDialog
     {
         private const string HelpMsgText = "Show help here";
+        private static string HelpMsgSpeak = VoiceMessageHelpers.WrapMessageInVoice(HelpMsgText);
+
         private const string CancelMsgText = "Cancelling...";
+        private static string CancelMsgSpeak = VoiceMessageHelpers.WrapMessageInVoice(CancelMsgText);
 
         public CancelAndHelpDialog(string id)
             : base(id)
@@ -40,13 +44,13 @@ namespace CoreBot.Dialogs
                 {
                     case "help":
                     case "?":
-                        var helpMessage = MessageFactory.Text(HelpMsgText, HelpMsgText, InputHints.ExpectingInput);
+                        var helpMessage = MessageFactory.Text(HelpMsgText, HelpMsgSpeak, InputHints.ExpectingInput);
                         await innerDc.Context.SendActivityAsync(helpMessage, cancellationToken);
                         return new DialogTurnResult(DialogTurnStatus.Waiting);
 
                     case "cancel":
                     case "quit":
-                        var cancelMessage = MessageFactory.Text(CancelMsgText, CancelMsgText, InputHints.IgnoringInput);
+                        var cancelMessage = MessageFactory.Text(CancelMsgText, CancelMsgSpeak, InputHints.IgnoringInput);
                         await innerDc.Context.SendActivityAsync(cancelMessage, cancellationToken);
                         return await innerDc.CancelAllDialogsAsync(cancellationToken);
                 }
