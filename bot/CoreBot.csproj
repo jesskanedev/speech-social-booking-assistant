@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CoreBot.Tests\**" />
+    <Content Remove="CoreBot.Tests\**" />
+    <EmbeddedResource Remove="CoreBot.Tests\**" />
+    <None Remove="CoreBot.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Cards\welcomeCard.json" />
   </ItemGroup>
 

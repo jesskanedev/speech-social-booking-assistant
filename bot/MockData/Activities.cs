@@ -75,9 +75,9 @@ namespace CoreBot.MockData
             }
 
             // Next few days
-            if (timeEntity.Contains("next few days", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("next couple of days", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("next couple days", StringComparison.InvariantCultureIgnoreCase))
+            if (timeEntity.Contains("few days", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("couple of days", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("couple days", StringComparison.InvariantCultureIgnoreCase))
             {
                 var filteredActivities = PortalActivities.Where(a => a.Date.Date < DateTime.Today.AddDays(5));
                 activityNames.AddRange(filteredActivities.Select(a => a.Name));
@@ -85,9 +85,8 @@ namespace CoreBot.MockData
 
             // This week
             if (timeEntity.Contains("this week", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("this coming week", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("coming week", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("the next week", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("next week", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("upcoming week", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("following week", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("week coming up", StringComparison.InvariantCultureIgnoreCase))
@@ -97,9 +96,9 @@ namespace CoreBot.MockData
             }
 
             // Next few weeks
-            if (timeEntity.Contains("next few weeks", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("next couple of weeks", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("next couple weeks", StringComparison.InvariantCultureIgnoreCase) ||
+            if (timeEntity.Contains("few weeks", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("couple of weeks", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("couple weeks", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("fortnight", StringComparison.InvariantCultureIgnoreCase))
             {
                 var filteredActivities = PortalActivities.Where(a => a.Date.Date < DateTime.Today.AddDays(21));
@@ -110,7 +109,7 @@ namespace CoreBot.MockData
             if (timeEntity.Contains("this month", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("this coming month", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("coming month", StringComparison.InvariantCultureIgnoreCase) ||
-                timeEntity.Contains("the next month", StringComparison.InvariantCultureIgnoreCase) ||
+                timeEntity.Contains("next month", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("upcoming month", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("following month", StringComparison.InvariantCultureIgnoreCase) ||
                 timeEntity.Contains("month coming up", StringComparison.InvariantCultureIgnoreCase))
