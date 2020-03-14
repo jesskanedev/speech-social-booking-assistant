@@ -21,22 +21,22 @@ namespace CoreBot.Helpers
         public static string WrapMessageInVoice(string message)
         {
             // No custom voice
-            //var voiceMessage = message;
+            var voiceMessage = message;
 
             //Standard custom voice
             //var voiceMessage = $"<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xml:lang=\"{_voiceRegion}\"><voice name=\"Microsoft Server Speech Text to Speech Voice ({_voiceRegion}, Jessa24kRUS)\">{message}</voice></speak>";
 
             //Neural custom voice - breaks???
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append($"<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xml:lang=\"{_voiceRegion}\">");
-            stringBuilder.Append($"<voice name=\"Microsoft Server Speech Text to Speech Voice ({_voiceRegion}, {_voiceName})\">");
-            stringBuilder.Append($"<mstts:express-as type=\"{_voiceExpressAs}\">");
-            stringBuilder.Append($"{message}");
-            stringBuilder.Append("</mstts:express-as>");
-            stringBuilder.Append("</voice>");
-            stringBuilder.Append("</speak>");
+            //var stringBuilder = new StringBuilder();
+            //stringBuilder.Append($"<speak version=\"1.0\" xmlns=\"https://www.w3.org/2001/10/synthesis\" xml:lang=\"{_voiceRegion}\">");
+            //stringBuilder.Append($"<voice name=\"Microsoft Server Speech Text to Speech Voice ({_voiceRegion}, {_voiceName})\">");
+            //stringBuilder.Append($"<mstts:express-as type=\"{_voiceExpressAs}\">");
+            //stringBuilder.Append($"{message}");
+            //stringBuilder.Append("</mstts:express-as>");
+            //stringBuilder.Append("</voice>");
+            //stringBuilder.Append("</speak>");
 
-            var voiceMessage = stringBuilder.ToString();
+            //var voiceMessage = stringBuilder.ToString();
 
             return voiceMessage;
         }

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
-using Microsoft.BotBuilderSamples;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreBot
@@ -43,6 +42,13 @@ namespace CoreBot
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, DialogAndWelcomeBot<MainDialog>>();
+
+            //Allow CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowCrossOrigins",
+                    builder => builder.WithOrigins("http://localhost:3000", "http://localhost:3978", "https://circledemo-speech.azurewebsites.net"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +66,7 @@ namespace CoreBot
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseWebSockets();
+            app.UseCors("AllowCrossOrigins");
             app.UseMvc();
         }
     }

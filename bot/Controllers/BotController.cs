@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
@@ -13,6 +14,7 @@ namespace Microsoft.BotBuilderSamples.Controllers
     // achieved by specifying a more specific type for the bot constructor argument.
     [Route("api/messages")]
     [ApiController]
+    [EnableCors("AllowCrossOrigins")]
     public class BotController : ControllerBase
     {
         private readonly IBotFrameworkHttpAdapter Adapter;
