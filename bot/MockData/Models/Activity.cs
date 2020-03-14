@@ -41,5 +41,10 @@ namespace CoreBot.MockData.Models
         /// The activity price.
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// The activity image URL.
+        /// </summary>
+        public string ImageUrl { get; set; }
     }
 }

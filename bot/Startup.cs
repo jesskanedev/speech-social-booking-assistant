@@ -37,6 +37,9 @@ namespace CoreBot
             // Register the BookingDialog.
             services.AddSingleton<BookingDialog>();
 
+            // Register the ActivityDialog.
+            services.AddSingleton<ActivityDialog>();
+
             // The MainDialog that will be run by the bot.
             services.AddSingleton<MainDialog>();
 

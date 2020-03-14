@@ -22,7 +22,8 @@ namespace CoreBot.MockData
                 Details = "We will meet at the front desk at 9am to board the bus, ready to leave by 9.30. Lunch will be supplied.",
                 Organiser = "Tammy McNamara",
                 Date = DateTime.Now.AddDays(3),
-                Price = 70.00M
+                Price = 70.00M,
+                ImageUrl = "https://circledemo-speech.azurewebsites.net/images/aquarium.jpg"
             },
             new Activity
             {
@@ -32,7 +33,8 @@ namespace CoreBot.MockData
                 Details = "We will be holding a special dinner event in the restaurant. Come dressed in your finest 20's attire!",
                 Organiser = "Jules Anderson",
                 Date = DateTime.Now.AddDays(12),
-                Price = 34.99M
+                Price = 34.99M,
+                ImageUrl = "https://circledemo-speech.azurewebsites.net/images/dinner.jpg"
             },
             new Activity
             {
@@ -42,7 +44,8 @@ namespace CoreBot.MockData
                 Details = "Let's get out and about on a special bus tour around Auckland city. We will be stopping at Cornwall Park for a picnic lunch. Please meet at the front desk at 8am sharp to board the bus.",
                 Organiser = "Jules Anderson",
                 Date = DateTime.Now.AddDays(1),
-                Price = 0.00M
+                Price = 0.00M,
+                ImageUrl = "https://circledemo-speech.azurewebsites.net/images/bus-tour.jpg"
             },
             new Activity
             {
@@ -52,7 +55,8 @@ namespace CoreBot.MockData
                 Details = "The Choir Club will be holding their annual charity fundraiser event in the restaurant after dinner. Free entry, but please feel free to bring a donation!",
                 Organiser = "Henry Greene",
                 Date = DateTime.Now,
-                Price = 0.00M
+                Price = 0.00M,
+                ImageUrl = "https://circledemo-speech.azurewebsites.net/images/choir.jpg"
             }
         };
 

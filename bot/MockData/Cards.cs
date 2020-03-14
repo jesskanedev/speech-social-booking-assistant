@@ -35,7 +35,7 @@ namespace CoreBot.MockData
                 Title = $"{activity.Name}",
                 Subtitle = $"{activity.Date:f}",
                 Text = $"{activity.Details}",
-                Images = new List<CardImage>()
+                Images = new List<CardImage> { new CardImage(url: activity.ImageUrl) }
             };
 
             return heroCard;
