@@ -10,7 +10,7 @@
   height: 18vmin;
   justify-content: center;
   margin: 0;
-  opacity: .2;
+  opacity: .6;
   outline: 0;
   position: absolute;
   right: 4vmin;
@@ -23,7 +23,7 @@
 
 .App-MicrophoneButton:active,
 .App-MicrophoneButton:hover {
-  opacity: .4;
+  opacity: 1;
 }
 
 .App-MicrophoneButton > svg {
