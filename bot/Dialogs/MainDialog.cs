@@ -33,7 +33,7 @@ namespace CoreBot.Dialogs
             AddDialog(bookingDialog);
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                IntroStepAsync,
+                //IntroStepAsync,
                 ActStepAsync,
                 //FinalStepAsync,
             }));
@@ -127,11 +127,13 @@ namespace CoreBot.Dialogs
                     if (luisResult.Entities?.ActivityName?.Length > 0)
                     {
                         var activityName = luisResult.Entities.ActivityName.First();
-                        activityBookingText = $"No problem! I've let the front desk know that you are interested in the {activityName}. They'll be in touch soon with details.";
+                        activityBookingText = $"No problem! I've let the front desk know that you're interested in the {activityName}. They'll be in touch soon with details.";
                     }
 
                     var activityBookingSpeak = VoiceMessageHelpers.WrapMessageInVoice(activityBookingText);
                     var activityBookingMessage = MessageFactory.Text(activityBookingText, activityBookingSpeak, InputHints.IgnoringInput);
+
+                    //await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = activityBookingMessage }, cancellationToken);
                     await stepContext.Context.SendActivityAsync(activityBookingMessage, cancellationToken);
                     break;
 
@@ -144,7 +146,7 @@ namespace CoreBot.Dialogs
 
                 default:
                     // Catch all for unhandled intents
-                    var didntUnderstandMessageText = $"Sorry, I didn't get that. Please try asking in a different way (intent was {luisResult.TopIntent().intent})";
+                    var didntUnderstandMessageText = $"Sorry, I didn't get that. Please try asking in a different way.";
                     var didntUnderstandMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(didntUnderstandMessageText);
                     var didntUnderstandMessage = MessageFactory.Text(didntUnderstandMessageText, didntUnderstandMessageSpeak, InputHints.IgnoringInput);
                     await stepContext.Context.SendActivityAsync(didntUnderstandMessage, cancellationToken);

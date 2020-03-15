@@ -1,5 +1,6 @@
 import './fabric-icons-inline.css';
 import './index.css';
+import './adaptive-card-overrides.css';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 import React from 'react';

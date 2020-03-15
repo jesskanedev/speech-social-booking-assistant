@@ -24,7 +24,7 @@ namespace CoreBot.Bots
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
         {
-            var welcomeText = "Hello and welcome!";
+            var welcomeText = "Hello and welcome! What can I help you with today?";
             var welcomeSpeak = VoiceMessageHelpers.WrapMessageInVoice(welcomeText);
             foreach (var member in membersAdded)
             {
