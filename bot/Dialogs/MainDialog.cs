@@ -85,7 +85,6 @@ namespace CoreBot.Dialogs
                             var enquiryMessageSpeak = VoiceMessageHelpers.WrapMessageInVoice(activitiesEnquiryText);
                             var activitiesEnquiryMessage = MessageFactory.Text(activitiesEnquiryText,
                                 enquiryMessageSpeak, InputHints.IgnoringInput);
-                            await stepContext.Context.SendActivityAsync(activitiesEnquiryMessage, cancellationToken);
 
                             activitiesEnquiryMessage.AttachmentLayout = AttachmentLayoutTypes.Carousel;
 
